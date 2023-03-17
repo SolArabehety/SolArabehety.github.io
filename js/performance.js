@@ -12,16 +12,42 @@
 })();
 
 /**
+ * @param {{
+ *  name: string;
+ *  entryType: string;
+ *  startTime: double;
+ *  duration: double;
+ * }[]} vitals
+ */
+function coreVitalParser(vitals) {
+  if (!Array.isArray(vitals)) {
+    return console.log("`vitals` is not an array. It's not possible to parse");
+  };
+
+  return JSON.stringify(vitals.map((v) => {
+    const { name, entryType, startTime, duration, ...otherCoreVitals } = coreVital ? coreVital : {};
+
+    return ({
+      n: name,
+      et: entryType,
+      st: startTime,
+      d: duration,
+      pr: otherCoreVitals
+    });  
+  }));
+};
+
+/**
  * FID
  * https://web.dev/fid/#measure-fid-in-javascript
  */
 function handleCalculateFID () {
   new PerformanceObserver(entryList => {
     var fidEntries = entryList.getEntries()[0];
-    console.log('first-input', JSON.stringify(fidEntries));
+    console.log('first-input', coreVitalParser(fidEntries));
 
     if (window.webkit) {
-      window.webkit.messageHandlers.embraceFID.postMessage(JSON.stringify(fidEntries));
+      window.webkit.messageHandlers.embraceFID.postMessage(coreVitalParser(fidEntries));
     }
   }).observe({type: 'first-input', buffered: true});
 }
@@ -33,10 +59,10 @@ function handleCalculateFID () {
 function handleCalculateFCP () {
   new PerformanceObserver(entryList => {
     var fcpEntries = entryList.getEntriesByName('first-contentful-paint');
-    console.log('first-contentful-paint', JSON.stringify(fcpEntries));
+    console.log('first-contentful-paint', coreVitalParser(fcpEntries));
 
     if (window.webkit) {
-      window.webkit.messageHandlers.embraceFCP.postMessage(JSON.stringify(fcpEntries));
+      window.webkit.messageHandlers.embraceFCP.postMessage(coreVitalParser(fcpEntries));
     }
   }).observe({type: 'paint', buffered: true});
 }
@@ -49,10 +75,10 @@ function handleCalculateLCP () {
   new PerformanceObserver(entryList => {
     var lcpEntries = entryList.getEntries();
 
-    console.log('largest-contentful-paint', JSON.stringify(lcpEntries));
+    console.log('largest-contentful-paint', coreVitalParser(lcpEntries));
 
     if (window.webkit) {
-      window.webkit.messageHandlers.embraceLCP.postMessage(JSON.stringify(lcpEntries));
+      window.webkit.messageHandlers.embraceLCP.postMessage(coreVitalParser(lcpEntries));
     }
   }).observe({type: 'largest-contentful-paint', buffered: true});
 }
@@ -99,10 +125,10 @@ function handleCalculateCLS() {
         clsEntries = sessionEntries;
 
         // Log the updated value (and its entries) to the console.
-        console.log('cumulative-layout-shift', JSON.stringify(clsEntries));
+        console.log('cumulative-layout-shift', coreVitalParser(clsEntries));
 
         if (window.webkit) {
-          window.webkit.messageHandlers.embraceCLS.postMessage(JSON.stringify(clsEntries));
+          window.webkit.messageHandlers.embraceCLS.postMessage(coreVitalParser(clsEntries));
         }    
       }
     }
