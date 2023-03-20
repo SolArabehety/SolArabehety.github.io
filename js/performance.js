@@ -51,7 +51,7 @@ function coreVitalParser(vitals) {
 function handleCalculateFID () {
   new PerformanceObserver(entryList => {
     var fidEntries = entryList.getEntries()[0];
-    console.log('first-input', coreVitalParser(fidEntries));
+    console.log('embrace', coreVitalParser(fidEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embraceFID.postMessage(coreVitalParser(fidEntries));
@@ -66,7 +66,7 @@ function handleCalculateFID () {
 function handleCalculateFCP () {
   new PerformanceObserver(entryList => {
     var fcpEntries = entryList.getEntriesByName('first-contentful-paint');
-    console.log('first-contentful-paint', coreVitalParser(fcpEntries));
+    console.log('embrace', coreVitalParser(fcpEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embraceFCP.postMessage(coreVitalParser(fcpEntries));
@@ -82,7 +82,7 @@ function handleCalculateLCP () {
   new PerformanceObserver(entryList => {
     var lcpEntries = entryList.getEntries();
 
-    console.log('largest-contentful-paint', coreVitalParser(lcpEntries));
+    console.log('embrace', coreVitalParser(lcpEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embraceLCP.postMessage(coreVitalParser(lcpEntries));
@@ -132,7 +132,7 @@ function handleCalculateCLS() {
         clsEntries = sessionEntries;
 
         // Log the updated value (and its entries) to the console.
-        console.log('cumulative-layout-shift', coreVitalParser(clsEntries));
+        console.log('embrace', coreVitalParser(clsEntries));
 
         if (window.webkit) {
           window.webkit.messageHandlers.embraceCLS.postMessage(coreVitalParser(clsEntries));
