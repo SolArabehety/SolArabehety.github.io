@@ -34,7 +34,7 @@ function coreVitalParser(vitals) {
   const response = JSON.parse(JSON.stringify(vitals)).map(({ name, entryType, startTime, duration, ...otherCoreVitals }) => {
     return ({
       n: !!name ? name : entryType,
-      et: METRICS[entryType],
+      t: METRICS[entryType],
       st: startTime,
       d: duration,
       p: otherCoreVitals,
@@ -54,7 +54,7 @@ function handleCalculateFID () {
     console.log('embrace', coreVitalParser(fidEntries));
 
     if (window.webkit) {
-      window.webkit.messageHandlers.embraceFID.postMessage(coreVitalParser(fidEntries));
+      window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(fidEntries));
     }
   }).observe({type: 'first-input', buffered: true});
 }
@@ -69,7 +69,7 @@ function handleCalculateFCP () {
     console.log('embrace', coreVitalParser(fcpEntries));
 
     if (window.webkit) {
-      window.webkit.messageHandlers.embraceFCP.postMessage(coreVitalParser(fcpEntries));
+      window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(fcpEntries));
     }
   }).observe({type: 'paint', buffered: true});
 }
@@ -85,7 +85,7 @@ function handleCalculateLCP () {
     console.log('embrace', coreVitalParser(lcpEntries));
 
     if (window.webkit) {
-      window.webkit.messageHandlers.embraceLCP.postMessage(coreVitalParser(lcpEntries));
+      window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(lcpEntries));
     }
   }).observe({type: 'largest-contentful-paint', buffered: true});
 }
@@ -135,7 +135,7 @@ function handleCalculateCLS() {
         console.log('embrace', coreVitalParser(clsEntries));
 
         if (window.webkit) {
-          window.webkit.messageHandlers.embraceCLS.postMessage(coreVitalParser(clsEntries));
+          window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(clsEntries));
         }    
       }
     }
