@@ -11,6 +11,13 @@
   handleCalculateCLS();
 })();
 
+const METRICS = {
+  'largest-contentful-paint': 'LCP',
+  'paint': 'FCP',
+  'layout-shift': 'CLS',
+  'first-input': 'FID',
+};
+
 /**
  * @param {{
  *  name: string;
@@ -23,18 +30,18 @@ function coreVitalParser(vitals) {
   if (!Array.isArray(vitals)) {
     return console.log("`vitals` is not an array. It's not possible to parse");
   };
-
-  return JSON.stringify(vitals.map((v) => {
-    const { name, entryType, startTime, duration, ...otherCoreVitals } = coreVital ? coreVital : {};
-
+  
+  const response = JSON.parse(JSON.stringify(vitals)).map(({ name, entryType, startTime, duration, ...otherCoreVitals }) => {
     return ({
-      n: name,
-      et: entryType,
+      n: !!name ? name : entryType,
+      et: METRICS[entryType],
       st: startTime,
       d: duration,
-      pr: otherCoreVitals
-    });  
-  }));
+      pr: otherCoreVitals,
+    })
+  });
+
+  return JSON.stringify(response);
 };
 
 /**
