@@ -11,12 +11,6 @@
   handleCalculateCLS();
 })();
 
-const METRICS = {
-  'largest-contentful-paint': 'LCP',
-  'paint': 'FCP',
-  'layout-shift': 'CLS',
-  'first-input': 'FID',
-};
 
 /**
  * @param {{
@@ -31,6 +25,13 @@ function coreVitalParser(vitals) {
     return console.log("`vitals` is not an array. It's not possible to parse");
   };
   
+  const METRICS = {
+    'largest-contentful-paint': 'LCP',
+    'paint': 'FCP',
+    'layout-shift': 'CLS',
+    'first-input': 'FID',
+  };
+
   const response = JSON.parse(JSON.stringify(vitals)).map(({ name, entryType, startTime, duration, ...otherCoreVitals }) => {
     return ({
       n: !!name ? name : entryType,
