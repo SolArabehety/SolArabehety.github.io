@@ -128,8 +128,8 @@ function handleCalculateCLS() {
       // If the current session value is larger than the current CLS value,
       // update CLS and the entries contributing to it.
       if (sessionValue > clsValue) {
-        clsValue = sessionValue;
-        clsEntries = sessionEntries.join(", ");
+        clsValue = sessionValue.join(", ");
+        clsEntries = sessionEntries;
 
         // Log the updated value (and its entries) to the console.
         console.log('embrace', coreVitalParser(clsEntries));
