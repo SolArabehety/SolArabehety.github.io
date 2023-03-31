@@ -119,7 +119,7 @@ function handleCalculateCLS() {
         entry.startTime - lastSessionEntry.startTime < 1000 &&
         entry.startTime - firstSessionEntry.startTime < 5000) {
         sessionValue += entry.value;
-        sessionEntries.push(entry);
+        sessionEntries.push(JSON.stringify(entry));
       } else {
         sessionValue = entry.value;
         sessionEntries = [entry];
@@ -128,7 +128,7 @@ function handleCalculateCLS() {
       // If the current session value is larger than the current CLS value,
       // update CLS and the entries contributing to it.
       if (sessionValue > clsValue) {
-        clsValue = sessionValue.join(", ");
+        clsValue = sessionValue;
         clsEntries = sessionEntries;
 
         // Log the updated value (and its entries) to the console.
