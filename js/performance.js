@@ -38,7 +38,7 @@ function coreVitalParser(vitals) {
       t: METRICS[entryType],
       st: startTime,
       d: duration,
-      p: otherCoreVitals,
+      p: JSON.stringify(otherCoreVitals),
     })
   });
 
