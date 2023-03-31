@@ -3,14 +3,13 @@
 /**
  * POC Webview support
  */
-(function () {
+(function() {
   console.log('SDKs Webview support - POC');
   handleCalculateFID();
   handleCalculateFCP();
   handleCalculateLCP();
   handleCalculateCLS();
 })();
-
 
 /**
  * @param {{
@@ -24,7 +23,7 @@ function coreVitalParser(vitals) {
   if (!Array.isArray(vitals)) {
     return console.log("`vitals` is not an array. It's not possible to parse");
   };
-  
+
   const METRICS = {
     'largest-contentful-paint': 'LCP',
     'paint': 'FCP',
@@ -38,7 +37,7 @@ function coreVitalParser(vitals) {
       t: METRICS[entryType],
       st: startTime,
       d: duration,
-      p: JSON.stringify(otherCoreVitals),
+      p: otherCoreVitals,
     })
   });
 
@@ -49,22 +48,22 @@ function coreVitalParser(vitals) {
  * FID
  * https://web.dev/fid/#measure-fid-in-javascript
  */
-function handleCalculateFID () {
+function handleCalculateFID() {
   new PerformanceObserver(entryList => {
-    var fidEntries = entryList.getEntries()[0];
+    var fidEntries = entryList.getEntries();
     console.log('embrace', coreVitalParser(fidEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(fidEntries));
     }
-  }).observe({type: 'first-input', buffered: true});
+  }).observe({ type: 'first-input', buffered: true });
 }
 
 /**
  * FCP
  * https://web.dev/fcp/#measure-fcp-in-javascript
  */
-function handleCalculateFCP () {
+function handleCalculateFCP() {
   new PerformanceObserver(entryList => {
     var fcpEntries = entryList.getEntriesByName('first-contentful-paint');
     console.log('embrace', coreVitalParser(fcpEntries));
@@ -72,14 +71,14 @@ function handleCalculateFCP () {
     if (window.webkit) {
       window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(fcpEntries));
     }
-  }).observe({type: 'paint', buffered: true});
+  }).observe({ type: 'paint', buffered: true });
 }
 
 /**
  * LCP
  * https://web.dev/lcp/#measure-lcp-in-javascript
  */
-function handleCalculateLCP () {
+function handleCalculateLCP() {
   new PerformanceObserver(entryList => {
     var lcpEntries = entryList.getEntries();
 
@@ -88,7 +87,7 @@ function handleCalculateLCP () {
     if (window.webkit) {
       window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(lcpEntries));
     }
-  }).observe({type: 'largest-contentful-paint', buffered: true});
+  }).observe({ type: 'largest-contentful-paint', buffered: true });
 }
 
 /**
@@ -117,8 +116,8 @@ function handleCalculateCLS() {
       // less than 5 seconds after the first entry in the session, include the
       // entry in the current session. Otherwise, start a new session.
       if (sessionValue &&
-          entry.startTime - lastSessionEntry.startTime < 1000 &&
-          entry.startTime - firstSessionEntry.startTime < 5000) {
+        entry.startTime - lastSessionEntry.startTime < 1000 &&
+        entry.startTime - firstSessionEntry.startTime < 5000) {
         sessionValue += entry.value;
         sessionEntries.push(entry);
       } else {
@@ -130,15 +129,15 @@ function handleCalculateCLS() {
       // update CLS and the entries contributing to it.
       if (sessionValue > clsValue) {
         clsValue = sessionValue;
-        clsEntries = sessionEntries;
+        clsEntries = sessionEntries.join(", ");
 
         // Log the updated value (and its entries) to the console.
         console.log('embrace', coreVitalParser(clsEntries));
 
         if (window.webkit) {
           window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(clsEntries));
-        }    
+        }
       }
     }
-  }).observe({type: 'layout-shift', buffered: true});
+  }).observe({ type: 'layout-shift', buffered: true });
 }
