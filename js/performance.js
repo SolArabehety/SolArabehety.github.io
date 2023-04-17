@@ -38,6 +38,7 @@ function coreVitalParser(vitals) {
       st: startTime,
       d: duration,
       p: otherCoreVitals,
+      u: window.location.href
     })
   });
 
@@ -51,7 +52,7 @@ function coreVitalParser(vitals) {
 function handleCalculateFID() {
   new PerformanceObserver(entryList => {
     var fidEntries = entryList.getEntries();
-    console.log('embrace', coreVitalParser(fidEntries));
+    console.log('EMBRACE_METRIC', coreVitalParser(fidEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(fidEntries));
@@ -66,7 +67,7 @@ function handleCalculateFID() {
 function handleCalculateFCP() {
   new PerformanceObserver(entryList => {
     var fcpEntries = entryList.getEntriesByName('first-contentful-paint');
-    console.log('embrace', coreVitalParser(fcpEntries));
+    console.log('EMBRACE_METRIC', coreVitalParser(fcpEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(fcpEntries));
@@ -82,7 +83,7 @@ function handleCalculateLCP() {
   new PerformanceObserver(entryList => {
     var lcpEntries = entryList.getEntries();
 
-    console.log('embrace', coreVitalParser(lcpEntries));
+    console.log('EMBRACE_METRIC', coreVitalParser(lcpEntries));
 
     if (window.webkit) {
       window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(lcpEntries));
@@ -119,7 +120,7 @@ function handleCalculateCLS() {
         entry.startTime - lastSessionEntry.startTime < 1000 &&
         entry.startTime - firstSessionEntry.startTime < 5000) {
         sessionValue += entry.value;
-        sessionEntries.push(JSON.stringify(entry));
+        sessionEntries.push(entry);
       } else {
         sessionValue = entry.value;
         sessionEntries = [entry];
@@ -132,7 +133,7 @@ function handleCalculateCLS() {
         clsEntries = sessionEntries;
 
         // Log the updated value (and its entries) to the console.
-        console.log('embrace', coreVitalParser(clsEntries));
+        console.log('EMBRACE_METRIC', coreVitalParser(clsEntries));
 
         if (window.webkit) {
           window.webkit.messageHandlers.embrace.postMessage(coreVitalParser(clsEntries));
