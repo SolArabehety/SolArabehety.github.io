@@ -37,8 +37,8 @@ function coreVitalParser(vitals) {
       t: METRICS[entryType],
       st: startTime,
       d: duration,
-      p: otherCoreVitals,
-      u: window.location.href
+      u: window.location.href,
+      p: otherCoreVitals
     })
   });
 
