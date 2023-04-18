@@ -1,5 +1,5 @@
 "use strict";
-
+const EMBRACE_KEY = "EMBRACE_METRIC";
 const PLATFORMS = {
   RN: "REACT_NATIVE",
   A: "Android",
@@ -11,7 +11,7 @@ const POST_MESSAGE_BY_PLATFORM = {
   REACT_NATIVE: window.ReactNativeWebView
     ? window.ReactNativeWebView.postMessage
     : console.log,
-  Android: (message) => console.log("EMBRACE_METRIC", message),
+  Android: console.log,
   iOS: window.webkit
     ? window.webkit.messageHandlers?.embrace?.postMessage
     : console.log,
@@ -74,6 +74,7 @@ function coreVitalParser(vitals) {
   const response = JSON.parse(JSON.stringify(vitals)).map(
     ({ name, entryType, startTime, duration, ...otherCoreVitals }) => {
       return {
+        key: EMBRACE_KEY,
         n: !!name ? name : entryType,
         t: METRICS[entryType],
         st: startTime,
